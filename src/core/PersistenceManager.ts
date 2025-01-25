@@ -1,7 +1,8 @@
-import { createDirectory } from "../helpers/mkdir";
 import fs from "fs";
 import { writeToDisk } from "../helpers/write";
-class PersistenceManager {
+import createDirectory from "../helpers/mkdir";
+
+export class PersistenceManager {
   private filePath: string;
 
   constructor() {
@@ -9,10 +10,20 @@ class PersistenceManager {
   }
   saveToDisk<K extends string | number | symbol, V>(data: Record<K, V>) {
     if (!fs.existsSync(this.filePath)) {
-      createDirectory(this.filePath);
+      console.log("Creating directory:", this.filePath);
+
+      createDirectory(this.filePath)
+        .then(() => {
+          console.log(`Directory ${this.filePath} created successfully.`);
+          const stringifiedData = JSON.stringify(data);
+          writeToDisk(this.filePath, stringifiedData);
+        })
+        .catch((err) => {
+          console.error("Error creating directory:", err.message);
+        });
     } else {
       const stringifiedData = JSON.stringify(data);
-      writeToDisk(this.filePath, data);
+      writeToDisk(this.filePath, stringifiedData);
     }
   }
 }

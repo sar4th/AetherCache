@@ -1,3 +1,4 @@
+"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -34,6 +35,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.createDirectory = createDirectory;
 var mkdir = require("fs/promises").mkdir;
 var path = require("path");
 function createDirectory(dirPath) {
@@ -43,9 +46,10 @@ function createDirectory(dirPath) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
+                    console.log({ dirPath: dirPath });
                     return [4 /*yield*/, mkdir(dirPath, { recursive: true })];
                 case 1:
-                    _a.sent(); // Ensures intermediate directories are created
+                    _a.sent();
                     console.log("Created directory ".concat(dirPath));
                     return [2 /*return*/, true];
                 case 2:
@@ -62,5 +66,5 @@ function createDirectory(dirPath) {
         });
     });
 }
-var directoryPath = path.join("C:", "Users", "sarat", "microDB", "test");
+var directoryPath = path.join("C:", "Users", "sarat", "microDB");
 createDirectory(directoryPath);
