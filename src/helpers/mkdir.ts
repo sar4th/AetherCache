@@ -1,8 +1,10 @@
 const { mkdir } = require("fs/promises");
 const path = require("path");
 
-export async function createDirectory(dirPath: string): Promise<boolean> {
+async function createDirectory(dirPath: string): Promise<boolean> {
   try {
+    console.log({ dirPath });
+
     await mkdir(dirPath, { recursive: true });
     console.log(`Created directory ${dirPath}`);
     return true;
@@ -18,5 +20,4 @@ export async function createDirectory(dirPath: string): Promise<boolean> {
   }
 }
 
-const directoryPath = path.join("C:", "Users", "sarat", "microDB");
-createDirectory(directoryPath);
+export default createDirectory;

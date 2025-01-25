@@ -1,7 +1,11 @@
-export class microDB<K extends string | number, V> {
+import { writeToDisk } from "../helpers/write";
+import { PersistenceManager } from "./PersistenceManager";
+
+export class microDB<K extends string | number, V> extends PersistenceManager {
   private dataStore: Record<K, V>;
 
   constructor() {
+    super();
     this.dataStore = {} as Record<K, V>;
   }
 
@@ -11,6 +15,7 @@ export class microDB<K extends string | number, V> {
       return false;
     }
     this.dataStore[key] = value;
+    super.saveToDisk(value as any);
     return true;
   }
 
@@ -36,3 +41,39 @@ export class microDB<K extends string | number, V> {
     return true;
   }
 }
+
+// class microDB {
+//   - private dataStore
+//   - private filePath
+
+//   constructor(filePath) {
+//     - Assign filePath or use default
+//     - Call loadFromDisk()
+//   }
+
+//   private loadFromDisk() {
+//     - Check if file exists
+//     - If yes, read and parse JSON
+//     - If no or error, initialize empty dataStore
+//   }
+
+//   private saveToDisk() {
+//     - Convert dataStore to JSON
+//     - Write JSON to file (ensure atomicity)
+//   }
+
+//   insert(key, value) {
+//     - Add key-value pair to dataStore
+//     - Call saveToDisk()
+//   }
+
+//   update(key, value) {
+//     - Modify value for the key
+//     - Call saveToDisk()
+//   }
+
+//   delete(key) {
+//     - Remove key from dataStore
+//     - Call saveToDisk()
+//   }
+// }

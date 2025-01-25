@@ -3,7 +3,11 @@ function runTests() {
   const db = new microDB();
 
   console.log("Test 1: Insert a new key-value pair");
-  db.insert("user1", "Alice");
+  db.insert("user1", {
+    name: "alice",
+    age: 22,
+    sex: "female",
+  });
   console.log(db.get("user1") === "Alice" ? "✔️ Passed" : "❌ Failed");
 
   console.log("Test 2: Try to insert a duplicate key");
