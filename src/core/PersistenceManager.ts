@@ -12,7 +12,6 @@ export class PersistenceManager {
     if (!fs.existsSync(this.filePath)) {
       console.log("Creating directory:", this.filePath);
 
-      // Check if `createDirectory` returns a Promise, as it's async.
       createDirectory(this.filePath)
         .then(() => {
           console.log(`Directory ${this.filePath} created successfully.`);
