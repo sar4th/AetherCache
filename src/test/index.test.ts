@@ -1,4 +1,4 @@
-import { microDB } from "../microDB";
+import { microDB } from "../core/microDB";
 function runTests() {
   const db = new microDB();
 
