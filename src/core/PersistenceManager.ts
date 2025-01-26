@@ -1,6 +1,8 @@
 import fs from "fs";
 import { writeToDisk } from "../helpers/write";
 import createDirectory from "../helpers/mkdir";
+import { readFileFromDisk } from "../helpers/read";
+import { flags } from "../types";
 
 export class PersistenceManager {
   private filePath: string;
@@ -8,7 +10,10 @@ export class PersistenceManager {
   constructor() {
     this.filePath = "C:\\Users\\sarat\\microDB";
   }
-  saveToDisk<K extends string | number | symbol, V>(data: Record<K, V>) {
+  syncToDisk<K extends string | number | symbol, V>(
+    data: Record<K, V>,
+    flag: flags
+  ) {
     if (!fs.existsSync(this.filePath)) {
       console.log("Creating directory:", this.filePath);
 
@@ -23,8 +28,16 @@ export class PersistenceManager {
         });
     } else {
       const stringifiedData = JSON.stringify(data);
-      writeToDisk(this.filePath, stringifiedData);
+      switch (flag) {
+        case "save":
+          writeToDisk(this.filePath, stringifiedData);
+          break;
+      }
     }
+  }
+  async loadFromDisk(): Promise<any> {
+    let data = await readFileFromDisk(this.filePath);
+    return data;
   }
 }
 
