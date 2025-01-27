@@ -1,22 +1,42 @@
 import { microDB } from "../core/microDB";
-function runTests() {
+
+function delay(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function runTests() {
   const db = new microDB();
-  console.log("Test 1: Insert a new key-value pair");
-  db.insert("user1", {
-    name: "alice",
-    age: 22,
-    sex: "female",
-  });
+
   try {
+    console.log("Test 1: Insert a new key-value pair");
+    db.insert("user1", {
+      name: "alice",
+      age: 22,
+      sex: "female",
+    });
+    console.log("✔️ Passed: Successfully inserted key-value pair");
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log("❌ Failed: " + error.message);
+    } else {
+      console.log("❌ Failed: Unexpected error type");
+    }
+  }
+
+  // Introduce a 3-second delay before updating
+  await delay(3000);
+
+  try {
+    console.log("Test 2: Update an existing key-value pair");
     db.update("user1", {
       name: "wonderland",
       age: 25,
       sex: "male",
     });
-    console.log("❌ Failed: Updated a non-existent key");
+    console.log("✔️ Passed: Successfully updated key-value pair");
   } catch (error) {
     if (error instanceof Error) {
-      console.log("✔️ Passed: " + error.message);
+      console.log("❌ Failed: " + error.message);
     } else {
       console.log("❌ Failed: Unexpected error type");
     }

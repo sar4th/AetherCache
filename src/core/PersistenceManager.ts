@@ -22,20 +22,14 @@ export class PersistenceManager {
       createDirectory(this.filePath)
         .then(() => {
           console.log(`Directory ${this.filePath} created successfully.`);
-          let tempobj = {
-            key: data,
-          };
-          const stringifiedData = JSON.stringify(tempobj);
+          const stringifiedData = JSON.stringify(data);
           writeToDisk(this.filePath, stringifiedData);
         })
         .catch((err) => {
           console.error("Error creating directory:", err.message);
         });
     } else {
-      let tempobj = {
-        key: data,
-      };
-      const stringifiedData = JSON.stringify(tempobj);
+      const stringifiedData = JSON.stringify(data);
       switch (flag) {
         case "save":
           writeToDisk(this.filePath, stringifiedData);
