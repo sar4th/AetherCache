@@ -1,7 +1,7 @@
 const { readFile } = require("fs/promises");
 const path = require("path");
 
-export async function readFileFromDisk(filePath: string) {
+export async function readFileFromDisk(filePath?: string) {
   const filePath2 = path.join(
     "C:",
     "Users",
