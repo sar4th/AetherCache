@@ -8,7 +8,6 @@ export class microDB<K extends string | number, V> extends PersistenceManager {
     super();
     this.dataStore = {} as Record<K, V>;
     let dataFromDisk = this.loadFromDisk();
-    console.log(dataFromDisk, "dataFromDisk");
   }
 
   insert(key: K, value: V): boolean {
@@ -31,6 +30,7 @@ export class microDB<K extends string | number, V> extends PersistenceManager {
       return false;
     }
     this.dataStore[key] = value;
+    super.syncToDisk(key as any, value as any, "update");
     return true;
   }
 

@@ -3,6 +3,7 @@ import { writeToDisk } from "../helpers/write";
 import createDirectory from "../helpers/mkdir";
 import { readFileFromDisk } from "../helpers/read";
 import { flags } from "../types";
+import { updateDiskData } from "../helpers/update";
 
 export class PersistenceManager {
   private filePath: string;
@@ -11,8 +12,9 @@ export class PersistenceManager {
     this.filePath = "C:\\Users\\sarat\\microDB";
   }
   syncToDisk<K extends string | number | symbol, V>(
-    data: Record<K, V>,
-    flag: flags
+    key?: string,
+    data?: Record<K, V>,
+    flag?: flags
   ) {
     if (!fs.existsSync(this.filePath)) {
       console.log("Creating directory:", this.filePath);
@@ -20,17 +22,26 @@ export class PersistenceManager {
       createDirectory(this.filePath)
         .then(() => {
           console.log(`Directory ${this.filePath} created successfully.`);
-          const stringifiedData = JSON.stringify(data);
+          let tempobj = {
+            key: data,
+          };
+          const stringifiedData = JSON.stringify(tempobj);
           writeToDisk(this.filePath, stringifiedData);
         })
         .catch((err) => {
           console.error("Error creating directory:", err.message);
         });
     } else {
-      const stringifiedData = JSON.stringify(data);
+      let tempobj = {
+        key: data,
+      };
+      const stringifiedData = JSON.stringify(tempobj);
       switch (flag) {
         case "save":
           writeToDisk(this.filePath, stringifiedData);
+          break;
+        case "update":
+          updateDiskData(this.filePath, key, stringifiedData);
           break;
       }
     }
