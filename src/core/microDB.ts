@@ -41,6 +41,7 @@ export class microDB<K extends string | number, V> extends PersistenceManager {
       return false;
     }
     delete this.dataStore[key];
+    super.syncToDisk(undefined,this.dataStore as any, "save");
     return true;
   }
 }

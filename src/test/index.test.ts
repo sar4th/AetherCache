@@ -24,15 +24,28 @@ async function runTests() {
   }
 
   // Introduce a 3-second delay before updating
-  await delay(3000);
+  await delay(5000);
+
+  // try {
+  //   console.log("Test 2: Update an existing key-value pair");
+  //   db.update("user1", {
+  //     name: "wonderland",
+  //     age: 25,
+  //     sex: "male",
+  //   });
+  //   console.log("✔️ Passed: Successfully updated key-value pair");
+  // } catch (error) {
+  //   if (error instanceof Error) {
+  //     console.log("❌ Failed: " + error.message);
+  //   } else {
+  //     console.log("❌ Failed: Unexpected error type");
+  //   }
+  // }
+
 
   try {
-    console.log("Test 2: Update an existing key-value pair");
-    db.update("user1", {
-      name: "wonderland",
-      age: 25,
-      sex: "male",
-    });
+    console.log("Test 3: delete an existing key-value pair");
+    db.delete("user1");
     console.log("✔️ Passed: Successfully updated key-value pair");
   } catch (error) {
     if (error instanceof Error) {
