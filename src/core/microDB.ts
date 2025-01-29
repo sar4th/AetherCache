@@ -1,14 +1,14 @@
-import { writeToDisk } from "../helpers/write";
 import { PersistenceManager } from "./PersistenceManager";
+import { SchemaManager } from "./SchemaManager";
 
 export class microDB<K extends string | number, V> extends PersistenceManager {
   private dataStore: Record<K, V>;
-
+  schemaManager: SchemaManager;
   constructor() {
     super();
+    this.schemaManager = new SchemaManager();
     this.dataStore = {} as Record<K, V>;
     let dataFromDisk = this.loadFromDisk();
-    console.log(dataFromDisk, "dataFromDisk");
   }
 
   insert(key: K, value: V): boolean {
@@ -16,8 +16,10 @@ export class microDB<K extends string | number, V> extends PersistenceManager {
       console.warn("The key already exists");
       return false;
     }
+    const { schema }: any = this.schemaManager.getSchema(key);
+    this.schemaManager.validate(value, schema);
     this.dataStore[key] = value;
-    super.syncToDisk(undefined,this.dataStore as any, "save");
+    super.syncToDisk(undefined, this.dataStore as any, "save");
     return true;
   }
 
@@ -31,7 +33,7 @@ export class microDB<K extends string | number, V> extends PersistenceManager {
       return false;
     }
     this.dataStore[key] = value;
-    super.syncToDisk(undefined,this.dataStore as any, "save");
+    super.syncToDisk(undefined, this.dataStore as any, "save");
     return true;
   }
 
@@ -41,42 +43,7 @@ export class microDB<K extends string | number, V> extends PersistenceManager {
       return false;
     }
     delete this.dataStore[key];
+    super.syncToDisk(undefined, this.dataStore as any, "save");
     return true;
   }
 }
-
-// class microDB {
-//   - private dataStore
-//   - private filePath
-
-//   constructor(filePath) {
-//     - Assign filePath or use default
-//     - Call loadFromDisk()
-//   }
-
-//   private loadFromDisk() {
-//     - Check if file exists
-//     - If yes, read and parse JSON
-//     - If no or error, initialize empty dataStore
-//   }
-
-//   private saveToDisk() {
-//     - Convert dataStore to JSON
-//     - Write JSON to file (ensure atomicity)
-//   }
-
-//   insert(key, value) {
-//     - Add key-value pair to dataStore
-//     - Call saveToDisk()
-//   }
-
-//   update(key, value) {
-//     - Modify value for the key
-//     - Call saveToDisk()
-//   }
-
-//   delete(key) {
-//     - Remove key from dataStore
-//     - Call saveToDisk()
-//   }
-// }
