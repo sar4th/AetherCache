@@ -6,6 +6,11 @@ function delay(ms: number): Promise<void> {
 
 async function runTests() {
   const db = new microDB();
+  db.schemaManager.registerSchema("user1", {
+    name: "string",
+    age: "number",
+    email: "string",
+  });
 
   try {
     console.log("Test 1: Insert a new key-value pair");
@@ -41,7 +46,6 @@ async function runTests() {
   //     console.log("❌ Failed: Unexpected error type");
   //   }
   // }
-
 
   try {
     console.log("Test 3: delete an existing key-value pair");
