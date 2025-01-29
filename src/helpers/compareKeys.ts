@@ -1,7 +1,7 @@
 export function compareKeys(a: {}, b: {}) {
   let missingKeys: string[] = [];
-  Object.keys(a).map((key) => {
-    if (!b.hasOwnProperty(key)) {
+  Object.keys(b).map((key) => {
+    if (!a.hasOwnProperty(key)) {
       missingKeys.push(key);
     }
   });
