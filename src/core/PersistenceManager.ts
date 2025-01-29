@@ -4,12 +4,16 @@ import createDirectory from "../helpers/mkdir";
 import { readFileFromDisk } from "../helpers/read";
 import { flags } from "../types";
 import { updateDiskData } from "../helpers/update";
+import {getHostOSbasePath} from "../helpers/get-platform";
+
 
 export class PersistenceManager {
   private filePath: string;
 
   constructor() {
-    this.filePath = "C:\\Users\\sarat\\microDB";
+    console.log(typeof(getHostOSbasePath));
+    
+    this.filePath = getHostOSbasePath()
   }
   syncToDisk<K extends string | number | symbol, V>(
     key?: string,
