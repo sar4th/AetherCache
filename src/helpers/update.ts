@@ -8,5 +8,4 @@ export async function updateDiskData(
   const diskData = await readFileFromDisk();
   const parsedData = JSON.parse(diskData);
   console.log(parsedData, "parsedData");
-  
 }

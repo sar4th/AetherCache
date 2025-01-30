@@ -1,22 +1,14 @@
-let obj2 = {
-  name: String,
-  age: Number,
-  email: String,
-};
-let obj1 = {
-  name: "sarath",
-  age: 12,
-  email: "s@mail",
-};
-export function compareTypes(a: {}, b: {}) {
-  let values: string[] = [];
-  Object.keys(a).map((key1) => {
-    Object.keys(b).map((key2) => {
-      if (typeof key1 != typeof key2) {
-        values.push(key1);
+export function compareTypes(value: any, schema: any) {
+  let error: any = [];
+  Object.keys(value).map((key: any) => {
+    if (Object.keys(value).every((key) => schema.hasOwnProperty(key))) {
+      if (typeof value[key] !== schema[key]) {
+        const errorMessage = `Type of '${key}' (${typeof value[
+          key
+        ]}) is different from the schema (${schema[key]})`;
+        error.push(errorMessage);
       }
-    });
+    }
   });
-  return values;
+  return error;
 }
-console.log(compareTypes(obj2, obj1));

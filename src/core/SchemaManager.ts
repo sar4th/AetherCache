@@ -1,3 +1,4 @@
+import { compareTypes } from "../helpers/compairTypes";
 import { compareKeys } from "../helpers/compareKeys";
 
 export class SchemaManager {
@@ -24,6 +25,11 @@ export class SchemaManager {
         `validation failed, ${missingKeys.join(",")} are missing `
       );
     }
+    const differenceInTypes = compareTypes(_userValue, userSchema);
+    if (differenceInTypes.length > 0) {
+      throw new Error(differenceInTypes.join("\n"));
+    }
+    return false;
   }
   getSchema(key: string | number) {
     return this.schemaStore.find((item) => item.name == key);
