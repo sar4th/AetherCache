@@ -10,5 +10,6 @@ export async function readFileFromDisk(filePath?: string) {
     return JSON.parse(data.toString());
   } catch (error) {
     console.error(error);
+    throw new Error(error as any);
   }
 }

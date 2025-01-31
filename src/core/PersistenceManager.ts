@@ -4,16 +4,15 @@ import createDirectory from "../helpers/mkdir";
 import { readFileFromDisk } from "../helpers/read";
 import { flags } from "../types";
 import { updateDiskData } from "../helpers/update";
-import {getHostOSbasePath} from "../helpers/get-platform";
-
+import { getHostOSbasePath } from "../helpers/get-platform";
 
 export class PersistenceManager {
   private filePath: string;
 
   constructor() {
-    console.log(typeof(getHostOSbasePath));
-    
-    this.filePath = getHostOSbasePath()
+    console.log(typeof getHostOSbasePath);
+
+    this.filePath = getHostOSbasePath();
   }
   syncToDisk<K extends string | number | symbol, V>(
     key?: string,
@@ -45,26 +44,13 @@ export class PersistenceManager {
     }
   }
   async loadFromDisk(): Promise<any> {
-    let data = await readFileFromDisk(this.filePath);
-    return data;
+    try {
+      let data = await readFileFromDisk(this.filePath);
+      if (data) {
+        return data;
+      }
+    } catch (error) {
+      if (error) throw new Error(error as any);
+    }
   }
 }
-
-// class PersistenceManager {
-//     - private filePath: string
-
-//     constructor(filePath: string) {
-//       - Assign the filePath
-//     }
-
-//     save(data: object): void {
-//       - Serialize data (JSON.stringify)
-//       - Write to file (ensure atomicity)
-//     }
-
-//     load(): object {
-//       - Check if the file exists
-//       - If yes, read and parse the file
-//       - If no, return an empty object
-//     }
-//   }
