@@ -4,36 +4,46 @@ import createDirectory from "../helpers/mkdir";
 import { readFileFromDisk } from "../helpers/read";
 import { flags } from "../types";
 import { updateDiskData } from "../helpers/update";
-import {getHostOSbasePath} from "../helpers/get-platform";
-
+import { getHostOSbasePath } from "../helpers/get-platform";
 
 export class PersistenceManager {
   private filePath: string;
 
   constructor() {
-    console.log(typeof(getHostOSbasePath));
-    
-    this.filePath = getHostOSbasePath()
+    console.log(typeof getHostOSbasePath);
+
+    this.filePath = getHostOSbasePath();
   }
   syncToDisk<K extends string | number | symbol, V>(
     key?: string,
     data?: Record<K, V>,
     flag?: flags
   ) {
+    const stringifyData = <K extends string, V>(
+      data: Record<K, V> | undefined
+    ): string => {
+      // If data is undefined or empty, return an empty string
+      if (!data || Object.keys(data).length === 0) {
+        return "";
+      }
+      // Otherwise, return the JSON string
+      return JSON.stringify(data);
+    };
+
+    const stringifiedData: string = stringifyData(data);
     if (!fs.existsSync(this.filePath)) {
       console.log("Creating directory:", this.filePath);
 
       createDirectory(this.filePath)
         .then(() => {
           console.log(`Directory ${this.filePath} created successfully.`);
-          const stringifiedData = JSON.stringify(data);
+
           writeToDisk(this.filePath, stringifiedData);
         })
         .catch((err) => {
           console.error("Error creating directory:", err.message);
         });
     } else {
-      const stringifiedData = JSON.stringify(data);
       switch (flag) {
         case "save":
           writeToDisk(this.filePath, stringifiedData);
@@ -45,26 +55,13 @@ export class PersistenceManager {
     }
   }
   async loadFromDisk(): Promise<any> {
-    let data = await readFileFromDisk(this.filePath);
-    return data;
+    try {
+      let data = await readFileFromDisk(this.filePath);
+      if (data) {
+        return data;
+      }
+    } catch (error) {
+      if (error) throw new Error(error as any);
+    }
   }
 }
-
-// class PersistenceManager {
-//     - private filePath: string
-
-//     constructor(filePath: string) {
-//       - Assign the filePath
-//     }
-
-//     save(data: object): void {
-//       - Serialize data (JSON.stringify)
-//       - Write to file (ensure atomicity)
-//     }
-
-//     load(): object {
-//       - Check if the file exists
-//       - If yes, read and parse the file
-//       - If no, return an empty object
-//     }
-//   }

@@ -10,8 +10,12 @@ export class microDB<K extends string | number, V> extends PersistenceManager {
     this.dataStore = {} as Record<K, V>;
   }
   async initialize() {
-    let dataFromDisk = await this.loadFromDisk();
-    this.dataStore = dataFromDisk;
+    try {
+      let dataFromDisk = await this.loadFromDisk();
+      this.dataStore = dataFromDisk;
+    } catch (error) {
+      console.warn("Nothing to sync");
+    }
   }
   insert(key: K, value: V): boolean {
     if (this.dataStore[key]) {
@@ -29,17 +33,7 @@ export class microDB<K extends string | number, V> extends PersistenceManager {
   }
 
   get(key: K): V | undefined {
-    // let dataSto: any = {
-    //   user1: {
-    //     name: "alice",
-    //     age: 22,
-    //     email: "test@mail.com",
-    //   },
-    // };
-    // console.log(dataSto[key], "this.dataStore[key];");
     if (Object.keys(this.dataStore).length > 0 && key) {
-      console.log(this.dataStore[key], "datastore");
-
       return this.dataStore[key];
     }
   }
@@ -61,10 +55,12 @@ export class microDB<K extends string | number, V> extends PersistenceManager {
 
   delete(key: K): boolean {
     if (!this.dataStore[key]) {
-      console.warn("The key does not exist");
-      return false;
+      throw new Error("The key does not exist");
     }
     delete this.dataStore[key];
+    if (Object.keys(this.dataStore).length == 0) {
+      super.syncToDisk(undefined, "" as any, "save");
+    }
     super.syncToDisk(undefined, this.dataStore as any, "save");
     return true;
   }
