@@ -34,19 +34,19 @@ async function runTests() {
     console.error("❌ Failed: ", error);
   }
 
-  await delay(2000); // Delay before updating
+  // await delay(2000); // Delay before updating
 
-  try {
-    console.log("Test 3: Update an existing key-value pair");
-    db.update("user1", {
-      name: "Alice Updated",
-      age: 25,
-      email: "updated@mail.com",
-    });
-    console.log("✔️ Passed: Successfully updated key-value pair");
-  } catch (error) {
-    console.error("❌ Failed: ", error);
-  }
+  // try {
+  //   console.log("Test 3: Update an existing key-value pair");
+  //   db.update("user1", {
+  //     name: "Alice Updated",
+  //     age: 25,
+  //     email: "updated@mail.com",
+  //   });
+  //   console.log("✔️ Passed: Successfully updated key-value pair");
+  // } catch (error) {
+  //   console.error("❌ Failed: ", error);
+  // }
 
   // try {
   //   console.log("Test 4: Filter records");

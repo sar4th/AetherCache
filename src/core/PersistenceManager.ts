@@ -19,20 +19,31 @@ export class PersistenceManager {
     data?: Record<K, V>,
     flag?: flags
   ) {
+    const stringifyData = <K extends string, V>(
+      data: Record<K, V> | undefined
+    ): string => {
+      // If data is undefined or empty, return an empty string
+      if (!data || Object.keys(data).length === 0) {
+        return "";
+      }
+      // Otherwise, return the JSON string
+      return JSON.stringify(data);
+    };
+
+    const stringifiedData: string = stringifyData(data);
     if (!fs.existsSync(this.filePath)) {
       console.log("Creating directory:", this.filePath);
 
       createDirectory(this.filePath)
         .then(() => {
           console.log(`Directory ${this.filePath} created successfully.`);
-          const stringifiedData = JSON.stringify(data);
+
           writeToDisk(this.filePath, stringifiedData);
         })
         .catch((err) => {
           console.error("Error creating directory:", err.message);
         });
     } else {
-      const stringifiedData = JSON.stringify(data);
       switch (flag) {
         case "save":
           writeToDisk(this.filePath, stringifiedData);

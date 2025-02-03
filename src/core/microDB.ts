@@ -14,7 +14,7 @@ export class microDB<K extends string | number, V> extends PersistenceManager {
       let dataFromDisk = await this.loadFromDisk();
       this.dataStore = dataFromDisk;
     } catch (error) {
-      console.log(error, "sswwww");
+      console.warn("Nothing to sync");
     }
   }
   insert(key: K, value: V): boolean {
@@ -58,6 +58,9 @@ export class microDB<K extends string | number, V> extends PersistenceManager {
       throw new Error("The key does not exist");
     }
     delete this.dataStore[key];
+    if (Object.keys(this.dataStore).length == 0) {
+      super.syncToDisk(undefined, "" as any, "save");
+    }
     super.syncToDisk(undefined, this.dataStore as any, "save");
     return true;
   }
