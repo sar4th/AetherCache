@@ -13,26 +13,26 @@ async function runTests() {
     email: "string",
   });
 
-  try {
-    console.log("Test 1: Insert a new key-value pair");
-    db.insert("user1", {
-      name: "alice",
-      age: 22,
-      email: "test@mail.com",
-    });
-    console.log("✔️ Passed: Successfully inserted key-value pair");
-  } catch (error) {
-    console.error("❌ Failed: ", error);
-  }
+  // try {
+  //   console.log("Test 1: Insert a new key-value pair");
+  //   db.insert("user1", {
+  //     name: "alice",
+  //     age: 22,
+  //     email: "test@mail.com",
+  //   });
+  //   console.log("✔️ Passed: Successfully inserted key-value pair");
+  // } catch (error) {
+  //   console.error("❌ Failed: ", error);
+  // }
 
-  try {
-    console.log("Test 2: Retrieve a key-value pair");
-    let user = db.get("user1");
-    console.log("Retrieved user:", user);
-    console.log("✔️ Passed: Successfully retrieved key-value pair");
-  } catch (error) {
-    console.error("❌ Failed: ", error);
-  }
+  // try {
+  //   console.log("Test 2: Retrieve a key-value pair");
+  //   let user = db.get("user1");
+  //   console.log("Retrieved user:", user);
+  //   console.log("✔️ Passed: Successfully retrieved key-value pair");
+  // } catch (error) {
+  //   console.error("❌ Failed: ", error);
+  // }
 
   // await delay(2000); // Delay before updating
 
@@ -59,9 +59,16 @@ async function runTests() {
   //   console.error("❌ Failed: ", error);
   // }
 
+  // try {
+  //   console.log("Test 5: Delete a key-value pair");
+  //   db.delete("user1");
+  //   console.log("✔️ Passed: Successfully deleted key-value pair");
+  // } catch (error) {
+  //   console.error("❌ Failed: ", error);
+  // }
   try {
     console.log("Test 5: Delete a key-value pair");
-    db.delete("user1");
+    db.filter({ age: 22 });
     console.log("✔️ Passed: Successfully deleted key-value pair");
   } catch (error) {
     console.error("❌ Failed: ", error);

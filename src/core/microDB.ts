@@ -2,7 +2,7 @@ import { PersistenceManager } from "./PersistenceManager";
 import { SchemaManager } from "./SchemaManager";
 
 export class microDB<K extends string | number, V> extends PersistenceManager {
-  private dataStore: Record<K, V>;
+  private dataStore: any;
   schemaManager: SchemaManager;
   constructor() {
     super();
@@ -63,5 +63,28 @@ export class microDB<K extends string | number, V> extends PersistenceManager {
     }
     super.syncToDisk(undefined, this.dataStore as any, "save");
     return true;
+  }
+  filter(query: {}) {
+    console.log(this.dataStore);
+
+    let filterKey = "";
+    let filterValue: any = "";
+
+    for (const [key, value] of Object.entries(query)) {
+      filterKey = key;
+      filterValue = value;
+    }
+
+    const mappedArray = Object.keys(this.dataStore)
+      .map((key) => ({
+        id: key,
+        ...this.dataStore[key],
+      }))
+      .find((item: any) => {
+        console.log(item.filterKey, "sss");
+        return item[filterKey] == item[filterValue];
+      });
+
+    // console.log(d, "dd");
   }
 }
