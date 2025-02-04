@@ -57,6 +57,7 @@ export class PersistenceManager {
   async loadFromDisk(): Promise<any> {
     try {
       let data = await readFileFromDisk(this.filePath);
+
       if (data) {
         return data;
       }

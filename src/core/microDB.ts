@@ -2,7 +2,7 @@ import { PersistenceManager } from "./PersistenceManager";
 import { SchemaManager } from "./SchemaManager";
 
 export class microDB<K extends string | number, V> extends PersistenceManager {
-  private dataStore: Record<K, V>;
+  private dataStore: any;
   schemaManager: SchemaManager;
   constructor() {
     super();
@@ -12,7 +12,10 @@ export class microDB<K extends string | number, V> extends PersistenceManager {
   async initialize() {
     try {
       let dataFromDisk = await this.loadFromDisk();
-      this.dataStore = dataFromDisk;
+
+      if (dataFromDisk) {
+        this.dataStore = dataFromDisk;
+      }
     } catch (error) {
       console.warn("Nothing to sync");
     }
@@ -63,5 +66,17 @@ export class microDB<K extends string | number, V> extends PersistenceManager {
     }
     super.syncToDisk(undefined, this.dataStore as any, "save");
     return true;
+  }
+
+  filter(filterFunction: any) {
+    let filteredData = Object.keys(this.dataStore)
+      .map((key) => ({
+        id: key,
+        ...this.dataStore[key],
+      }))
+      .filter((item: any) => {
+        return filterFunction(item);
+      });
+    console.log(filteredData);
   }
 }
