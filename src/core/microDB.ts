@@ -25,6 +25,9 @@ export class microDB<K extends string | number, V> extends PersistenceManager {
       console.warn("The key already exists");
       return false;
     }
+    console.log(this.schemaManager);
+    console.log(key);
+
     const { schema }: any = this.schemaManager.getSchema(key);
     let errors = this.schemaManager.validate(value, schema);
     if (errors == false) {

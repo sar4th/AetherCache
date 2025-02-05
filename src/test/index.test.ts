@@ -7,17 +7,22 @@ function delay(ms: number): Promise<void> {
 async function runTests() {
   const db = new microDB();
   await db.initialize();
-  db.schemaManager.registerSchema("user", {
+  db.schemaManager.registerSchema("users", {
     age: "number",
     name: "string",
     email: "string",
   });
 
   // Insert multiple records for filtering
-  db.insert("user1", { name: "Alice", age: 35, email: "test@mail.com" });
-  db.insert("user2", { name: "alice", age: 2, email: "test@mail.com" });
-  db.insert("user3", { name: "Bob", age: 30, email: "bob@mail.com" });
-  db.insert("user4", { name: "alice", age: 22, email: "test@mail.com" });
+  // db.insert("user", { name: "Alice", age: 35, email: "test@mail.com" });
+  // db.insert("user1", { name: "alice", age: 2, email: "test@mail.com" });
+  // db.insert("user", { name: "Bob", age: 30, email: "bob@mail.com" });
+  // db.insert("user", { name: "alice", age: 22, email: "test@mail.com" });
+
+  db.insert("users", {
+    user1: { name: "Alice", age: 35, email: "test@mail.com" },
+    user2: { name: "alice", age: 2, email: "test@mail.com" },
+  });
 
   try {
     console.log("Test 1: Filter users with age > 25");

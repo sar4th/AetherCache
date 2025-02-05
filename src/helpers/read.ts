@@ -1,16 +1,21 @@
 import { getHostOSbasePath } from "./get-platform";
 import fs from "fs";
 import createDirectory from "./mkdir";
+import { writeToDisk } from "./write";
 const { readFile } = require("fs/promises");
 const path = require("path");
 
 export async function readFileFromDisk(filePath?: string) {
+  let __dir = getHostOSbasePath();
   const filePath2 = getHostOSbasePath() + "/dataStore.json";
   if (!fs.existsSync(filePath2)) {
-    console.log("Creating directory:", filePath2);
-    createDirectory(filePath2).then(async () => {
-      const data = await readFile(filePath2);
-      return JSON.parse(data.toString());
+    createDirectory(__dir).then(() => {
+      console.log(`Directory ${__dir} created successfully.`);
+
+      writeToDisk(filePath2, "").then(async () => {
+        const data = await readFile(filePath2);
+        return JSON.parse(data.toString());
+      });
     });
   }
   try {
