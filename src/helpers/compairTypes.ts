@@ -1,3 +1,4 @@
+//comapair the types
 export function compareTypes(value: any, schema: any) {
   let error: any = [];
   Object.keys(value).map((key: any) => {
