@@ -19,10 +19,13 @@ export class SchemaManager {
     }
   }
   validate(_userValue: any, userSchema: any) {
+
     const missingKeys = compareKeys(_userValue, userSchema);
-    if (missingKeys.length > 0) {
+    console.log(missingKeys);
+
+    if (missingKeys!.length > 0) {
       throw new Error(
-        `validation failed, ${missingKeys.join(",")} are missing `
+        `validation failed, ${missingKeys!.join(",")} are missing `
       );
     }
     const differenceInTypes = compareTypes(_userValue, userSchema);

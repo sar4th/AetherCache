@@ -7,6 +7,8 @@ const path = require("path");
 
 export async function readFileFromDisk(filePath?: string) {
   let __dir = getHostOSbasePath();
+
+
   const filePath2 = getHostOSbasePath() + "/dataStore.json";
   if (!fs.existsSync(filePath2)) {
     createDirectory(__dir).then(() => {

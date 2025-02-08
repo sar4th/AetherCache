@@ -30,11 +30,11 @@ export class microDB<K extends string | number, V> extends PersistenceManager {
 
     const { schema }: any = this.schemaManager.getSchema(key);
     let errors = this.schemaManager.validate(value, schema);
-    if (errors == false) {
-      this.dataStore[key] = value;
-      super.syncToDisk(undefined, this.dataStore as any, "save");
-      return true;
-    }
+    // if (errors == false) {
+    //   this.dataStore[key] = value;
+    //   super.syncToDisk(undefined, this.dataStore as any, "save");
+    //   return true;
+    // }
     return true;
   }
 
