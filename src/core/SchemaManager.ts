@@ -21,9 +21,9 @@ export class SchemaManager {
   validate(_userValue: any, userSchema: any) {
 
     const missingKeys = compareKeys(_userValue, userSchema);
-    console.log(missingKeys);
+    console.log({missingKeys});
 
-    if (missingKeys!.length > 0) {
+    if (!isArrayOfArraysEmpty(missingKeys)) {
       throw new Error(
         `validation failed, ${missingKeys!.join(",")} are missing `
       );
@@ -37,4 +37,7 @@ export class SchemaManager {
   getSchema(key: string | number) {
     return this.schemaStore.find((item) => item.name == key);
   }
+}
+function isArrayOfArraysEmpty(arr: any) {
+  return Array.isArray(arr) && arr.every(subArray => Array.isArray(subArray) && subArray.length === 0);
 }
