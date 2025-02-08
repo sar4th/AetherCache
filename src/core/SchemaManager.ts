@@ -19,10 +19,13 @@ export class SchemaManager {
     }
   }
   validate(_userValue: any, userSchema: any) {
+
     const missingKeys = compareKeys(_userValue, userSchema);
-    if (missingKeys.length > 0) {
+    console.log({missingKeys});
+
+    if (!isArrayOfArraysEmpty(missingKeys)) {
       throw new Error(
-        `validation failed, ${missingKeys.join(",")} are missing `
+        `validation failed, ${missingKeys!.join(",")} are missing `
       );
     }
     const differenceInTypes = compareTypes(_userValue, userSchema);
@@ -34,4 +37,7 @@ export class SchemaManager {
   getSchema(key: string | number) {
     return this.schemaStore.find((item) => item.name == key);
   }
+}
+function isArrayOfArraysEmpty(arr: any) {
+  return Array.isArray(arr) && arr.every(subArray => Array.isArray(subArray) && subArray.length === 0);
 }
