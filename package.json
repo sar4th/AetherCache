@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "A lightweight in-memory database implemented in TypeScript.",
   "main": "dist/index.js",
+  "bin": {
+    "aether": "dist/cli/src/commands/*"
+  },
   "scripts": {
     "build": "tsc",
     "test": "ts-node src/test/index.test.ts"
@@ -11,5 +14,8 @@
     "ts-node": "^10.9.1",
     "typescript": "^5.7.3"
   },
-  "type": "commonjs"
+  "type": "commonjs",
+  "dependencies": {
+    "commander": "^13.1.0"
+  }
 }

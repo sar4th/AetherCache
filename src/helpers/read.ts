@@ -10,12 +10,16 @@ export async function readFileFromDisk(filePath?: string) {
 
   const filePath2 = getHostOSbasePath() + "/dataStore.json";
   if (!fs.existsSync(filePath2)) {
-    createDirectory(__dir).then(() => {
-      writeToDisk(filePath2, "").then(async () => {
-        const data = await readFile(filePath2);
-        return JSON.parse(data.toString());
+    try {
+      createDirectory(__dir).then(() => {
+        writeToDisk(__dir, "").then(async () => {
+          const data = await readFile(filePath2);
+          return JSON.parse(data.toString());
+        });
       });
-    });
+    } catch (error) {
+      console.log("error while creating a new dir", error);
+    }
   }
   try {
     const data = await readFile(filePath2);
