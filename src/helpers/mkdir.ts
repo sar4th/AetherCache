@@ -3,10 +3,8 @@ const path = require("path");
 
 async function createDirectory(dirPath: string): Promise<boolean> {
   try {
-    console.log({ dirPath });
-
     await mkdir(dirPath, { recursive: true });
-    console.log(`Created directory ${dirPath}`);
+
     return true;
   } catch (error) {
     if (error instanceof Error) {

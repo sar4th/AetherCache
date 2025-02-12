@@ -1,5 +1,5 @@
 {
-  "name": "microdb",
+  "name": "aether-cache",
   "version": "1.0.0",
   "description": "A lightweight in-memory database implemented in TypeScript.",
   "main": "dist/index.js",
