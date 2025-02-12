@@ -10,8 +10,6 @@ export class PersistenceManager {
   private filePath: string;
 
   constructor() {
-    console.log(typeof getHostOSbasePath);
-
     this.filePath = getHostOSbasePath();
   }
   syncToDisk<K extends string | number | symbol, V>(
@@ -32,12 +30,8 @@ export class PersistenceManager {
 
     const stringifiedData: string = stringifyData(data);
     if (!fs.existsSync(this.filePath)) {
-      console.log("Creating directory:", this.filePath);
-
       createDirectory(this.filePath)
         .then(() => {
-          console.log(`Directory ${this.filePath} created successfully.`);
-
           writeToDisk(this.filePath, stringifiedData);
         })
         .catch((err) => {

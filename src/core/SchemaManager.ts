@@ -19,9 +19,7 @@ export class SchemaManager {
     }
   }
   validate(_userValue: any, userSchema: any) {
-
     const missingKeys = compareKeys(_userValue, userSchema);
-    console.log({missingKeys});
 
     if (!isArrayOfArraysEmpty(missingKeys)) {
       throw new Error(
@@ -39,5 +37,8 @@ export class SchemaManager {
   }
 }
 function isArrayOfArraysEmpty(arr: any) {
-  return Array.isArray(arr) && arr.every(subArray => Array.isArray(subArray) && subArray.length === 0);
+  return (
+    Array.isArray(arr) &&
+    arr.every((subArray) => Array.isArray(subArray) && subArray.length === 0)
+  );
 }
