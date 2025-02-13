@@ -1,8 +1,8 @@
 #!/usr/bin/env node
-import { program } from "commander";
-import { microDB } from "../../../core/microDB";
-//list command
-program
+import { Command } from "commander";
+import { microDB } from "../../core/microDB";
+
+export const instantiateCommand = new Command()
   .command("instantiate")
   .alias("init")
   .description("Instantiate database")
@@ -10,5 +10,3 @@ program
     const db = new microDB();
     await db.initialize();
   });
-
-program.parse(process.argv);

@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-      "lib": ["ES2022", "DOM"],
+    "lib": ["ES2022", "DOM"],
     "target": "ES2022",
     "module": "CommonJS",
     "strict": true,
@@ -8,12 +8,6 @@
     "rootDir": "src",
     "esModuleInterop": true
   },
-  "include": [
-    "src",
-    "test"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist"
-  ]
+  "include": ["src", "test", "src/cli/commands"],
+  "exclude": ["node_modules", "dist"]
 }

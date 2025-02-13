@@ -3,12 +3,11 @@ import fs from "fs";
 import createDirectory from "./mkdir";
 import { writeToDisk } from "./write";
 const { readFile } = require("fs/promises");
-const path = require("path");
 
-export async function readFileFromDisk(filePath?: string) {
+export async function readFileFromDisk(variant?: string) {
   let __dir = getHostOSbasePath();
-
-  const filePath2 = getHostOSbasePath() + "/dataStore.json";
+  let subPath = variant == "db" ? "/dataStore.json" : "/schemaStore.json";
+  const filePath2 = getHostOSbasePath() + subPath;
   if (!fs.existsSync(filePath2)) {
     try {
       createDirectory(__dir).then(() => {

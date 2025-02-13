@@ -1,21 +1,41 @@
 import { compareTypes } from "../helpers/compairTypes";
 import { compareKeys } from "../helpers/compareKeys";
+import { PersistenceManager } from "./PersistenceManager";
 
-export class SchemaManager {
-  private schemaStore: { name: string; schema: Record<string, string> }[] = [];
+export class SchemaManager extends PersistenceManager {
+  schemaStore: { name: string; schema: Record<string, string> }[] = [];
   this: any;
 
   constructor() {
+    super();
     this.schemaStore = [];
   }
 
   registerSchema(name: string, schema: Record<string, string>) {
-    const existingIndex = this.schemaStore.findIndex((s) => s.name === name);
+    try {
+      const existingIndex = this.schemaStore.findIndex((s) => s.name === name);
 
-    if (existingIndex !== -1) {
-      this.schemaStore[existingIndex].schema = schema;
-    } else {
-      this.schemaStore.push({ name, schema });
+      if (existingIndex !== -1) {
+        this.schemaStore[existingIndex].schema = schema;
+        super.syncToDisk(
+          undefined,
+          this.schemaStore as typeof this.schemaStore,
+          "save",
+          "schema"
+        );
+        return this.schemaStore;
+      } else {
+        this.schemaStore.push({ name, schema });
+        super.syncToDisk(
+          undefined,
+          this.schemaStore as typeof this.schemaStore,
+          "save",
+          "schema"
+        );
+        return this.schemaStore;
+      }
+    } catch (error) {
+      console.log(error);
     }
   }
   validate(_userValue: any, userSchema: any) {

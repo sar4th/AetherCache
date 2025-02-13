@@ -4,7 +4,7 @@
   "description": "A lightweight in-memory database implemented in TypeScript.",
   "main": "dist/index.js",
   "bin": {
-    "aether": "dist/cli/src/commands/*"
+    "aether": "dist/cli/index.js"
   },
   "scripts": {
     "build": "tsc",
