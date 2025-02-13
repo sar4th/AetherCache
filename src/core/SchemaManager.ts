@@ -12,16 +12,30 @@ export class SchemaManager extends PersistenceManager {
   }
 
   registerSchema(name: string, schema: Record<string, string>) {
-    const existingIndex = this.schemaStore.findIndex((s) => s.name === name);
+    try {
+      const existingIndex = this.schemaStore.findIndex((s) => s.name === name);
 
-    if (existingIndex !== -1) {
-      this.schemaStore[existingIndex].schema = schema;
-      super.syncToDisk(undefined, this.schemaStore as any, "save", "schema");
-      return this.schemaStore;
-    } else {
-      this.schemaStore.push({ name, schema });
-      super.syncToDisk(undefined, this.schemaStore as any, "save", "schema");
-      return this.schemaStore;
+      if (existingIndex !== -1) {
+        this.schemaStore[existingIndex].schema = schema;
+        super.syncToDisk(
+          undefined,
+          this.schemaStore as typeof this.schemaStore,
+          "save",
+          "schema"
+        );
+        return this.schemaStore;
+      } else {
+        this.schemaStore.push({ name, schema });
+        super.syncToDisk(
+          undefined,
+          this.schemaStore as typeof this.schemaStore,
+          "save",
+          "schema"
+        );
+        return this.schemaStore;
+      }
+    } catch (error) {
+      console.log(error);
     }
   }
   validate(_userValue: any, userSchema: any) {
