@@ -11,10 +11,14 @@ export class microDB<K extends string | number, V> extends PersistenceManager {
   }
   async initialize() {
     try {
-      let dataFromDisk = await this.loadFromDisk();
+      let dataFromDisk = await this.loadDataFromDisk();
+      let schemasFromDisk = await this.loadSchemasFromDisk();
 
       if (dataFromDisk) {
         this.dataStore = dataFromDisk;
+      }
+      if (schemasFromDisk) {
+        this.schemaManager.schemaStore = schemasFromDisk;
       }
     } catch (error) {
       console.warn("Nothing to sync");
@@ -25,7 +29,6 @@ export class microDB<K extends string | number, V> extends PersistenceManager {
       console.warn("The key already exists");
       return false;
     }
-    console.log(this.schemaManager, "key");
 
     const { schema }: any = this.schemaManager.getSchema(key);
     let errors = this.schemaManager.validate(value, schema);

@@ -1,11 +1,13 @@
 import { compareTypes } from "../helpers/compairTypes";
 import { compareKeys } from "../helpers/compareKeys";
+import { PersistenceManager } from "./PersistenceManager";
 
-export class SchemaManager {
-  private schemaStore: { name: string; schema: Record<string, string> }[] = [];
+export class SchemaManager extends PersistenceManager {
+  schemaStore: { name: string; schema: Record<string, string> }[] = [];
   this: any;
 
   constructor() {
+    super();
     this.schemaStore = [];
   }
 
@@ -14,9 +16,11 @@ export class SchemaManager {
 
     if (existingIndex !== -1) {
       this.schemaStore[existingIndex].schema = schema;
+      super.syncToDisk(undefined, this.schemaStore as any, "save", "schema");
       return this.schemaStore;
     } else {
       this.schemaStore.push({ name, schema });
+      super.syncToDisk(undefined, this.schemaStore as any, "save", "schema");
       return this.schemaStore;
     }
   }

@@ -5,6 +5,6 @@ export async function updateDiskData(
   key?: string,
   value?: string
 ) {
-  const diskData = await readFileFromDisk();
+  const diskData = await readFileFromDisk("db");
   const parsedData = JSON.parse(diskData);
 }

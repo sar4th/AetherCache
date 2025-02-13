@@ -15,7 +15,8 @@ export class PersistenceManager {
   syncToDisk<K extends string | number | symbol, V>(
     key?: string,
     data?: Record<K, V>,
-    flag?: flags
+    flag?: flags,
+    variant?: string
   ) {
     const stringifyData = <K extends string, V>(
       data: Record<K, V> | undefined
@@ -40,7 +41,7 @@ export class PersistenceManager {
     } else {
       switch (flag) {
         case "save":
-          writeToDisk(this.filePath, stringifiedData);
+          writeToDisk(this.filePath, stringifiedData, variant);
           break;
         case "update":
           updateDiskData(this.filePath, key, stringifiedData);
@@ -48,9 +49,20 @@ export class PersistenceManager {
       }
     }
   }
-  async loadFromDisk(): Promise<any> {
+  async loadDataFromDisk(): Promise<any> {
     try {
-      let data = await readFileFromDisk(this.filePath);
+      let data = await readFileFromDisk("db");
+
+      if (data) {
+        return data;
+      }
+    } catch (error) {
+      if (error) throw new Error(error as any);
+    }
+  }
+  async loadSchemasFromDisk(): Promise<any> {
+    try {
+      let data = await readFileFromDisk("schemas");
 
       if (data) {
         return data;
