@@ -14,8 +14,10 @@ export class SchemaManager {
 
     if (existingIndex !== -1) {
       this.schemaStore[existingIndex].schema = schema;
+      return this.schemaStore;
     } else {
       this.schemaStore.push({ name, schema });
+      return this.schemaStore;
     }
   }
   validate(_userValue: any, userSchema: any) {
