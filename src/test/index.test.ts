@@ -14,7 +14,7 @@ async function runTests() {
   });
 
   // Insert multiple records for filtering
-  // db.insert("users", { name: "Alice", age: 35, email: "test@mail.com" });
+  db.insert("users", { name: "Alice", age: 35, email: "test@mail.com" });
   // db.insert("user1", { name: "alice", age: 2, email: "test@mail.com" });
   // db.insert("user", { name: "Bob", age: 30, email: "bob@mail.com" });
   // db.insert("user", { name: "alice", age: 22, email: "test@mail.com" });
