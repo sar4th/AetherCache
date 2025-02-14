@@ -8,6 +8,5 @@ export const createNewSchema = new Command()
   .argument("<...values>", "values")
   .description("create new schema")
   .action(async (schema, values) => {
-    let s = db.schemaManager.registerSchema(schema, values);
-    console.log(s);
+    let s = db.schemaManager.registerSchema(schema, JSON.parse(values));
   });
