@@ -1,6 +1,7 @@
-# microDB
+# AetherCache
 
-**microDB** is a simple, in-memory key-value database written in TypeScript. It provides basic database operations (insert, get, update, delete) with persistence using file storage.
+
+**AetherCache** is a simple, in-memory key-value database written in TypeScript. It provides basic database operations (insert, get, update, delete) with persistence using file storage.
 
 ## Features
 
@@ -14,5 +15,5 @@
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/yourusername/microdb.git
+   git clone https://github.com/sar4th/AetherCache.git
    ```
