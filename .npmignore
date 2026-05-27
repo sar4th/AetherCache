@@ -1,0 +1,8 @@
+src
+tests
+docs
+todo.md
+tsconfig.json
+*.log
+coverage
+node_modules

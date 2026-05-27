@@ -1,13 +1,19 @@
 {
   "compilerOptions": {
-    "lib": ["ES2022", "DOM"],
     "target": "ES2022",
     "module": "CommonJS",
-    "strict": true,
-    "outDir": "dist",
+    "moduleResolution": "Node",
+    "lib": ["ES2022"],
     "rootDir": "src",
-    "esModuleInterop": true
+    "outDir": "dist",
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "strict": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true
   },
-  "include": ["src", "test", "src/cli/commands"],
-  "exclude": ["node_modules", "dist"]
+  "include": ["src/**/*.ts"],
+  "exclude": ["dist", "node_modules", "tests", "docs"]
 }

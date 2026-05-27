@@ -1,21 +1,60 @@
 {
   "name": "aether-cache",
-  "version": "1.0.0",
-  "description": "A lightweight in-memory database implemented in TypeScript.",
-  "main": "dist/index.js",
-  "bin": {
-    "aether": "dist/cli/index.js"
-  },
-  "scripts": {
-    "build": "tsc",
-    "test": "ts-node src/test/index.test.ts"
-  },
-  "devDependencies": {
-    "ts-node": "^10.9.1",
-    "typescript": "^5.7.3"
-  },
+  "version": "0.1.1",
+  "description": "A lightweight embedded TypeScript database with collections, schema validation, indexing, and JSON persistence.",
+  "license": "MIT",
+  "author": "Sarath",
   "type": "commonjs",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.js"
+    }
+  },
+  "bin": {
+    "aether": "./dist/cli/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\"",
+    "build": "npm run clean && tsc -p tsconfig.json",
+    "test": "ts-node tests/index.test.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "prepack": "npm run build",
+    "prepublishOnly": "npm run test && npm run build"
+  },
+  "keywords": [
+    "database",
+    "embedded-database",
+    "typescript",
+    "in-memory",
+    "json-persistence",
+    "indexing",
+    "schema-validation"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sar4th/aether-cache.git"
+  },
+  "bugs": {
+    "url": "https://github.com/sar4th/aether-cache/issues"
+  },
+  "homepage": "https://github.com/sar4th/aether-cache#readme",
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "commander": "^13.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.7.3"
   }
 }

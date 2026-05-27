@@ -1,70 +1,124 @@
 # AetherCache
 
-A custom in-memory database engine built in TypeScript to explore how modern databases handle storage, persistence, schema management, and query execution internally.
+AetherCache is a lightweight embedded TypeScript database for learning and building
+single-process storage engines. It supports collection-based records, schema
+validation, primary-key indexing, and optional JSON persistence.
 
----
+## Install
+
+```sh
+npm install aether-cache
+```
+
+## Quick Start
+
+```ts
+import { AetherCache } from "aether-cache";
+
+interface User {
+  name: string;
+  age: number;
+  email: string;
+}
+
+const db = new AetherCache<User>();
+
+await db.createCollection("users", {
+  name: "string",
+  age: "number",
+  email: "string",
+});
+
+const id = await db.insert("users", {
+  name: "Ada Lovelace",
+  age: 36,
+  email: "ada@example.com",
+});
+
+const user = db.get("users", id as string);
+console.log(user?.data);
+```
+
+## Persistence
+
+Persistence is opt-in. When enabled, AetherCache writes JSON files using an
+atomic temp-file-and-rename strategy.
+
+```ts
+const db = new AetherCache<User>({
+  persist: true,
+  storageDir: "./.aether-cache",
+});
+
+await db.initialize();
+```
+
+## Public API
+
+### `new AetherCache<TRecord>(options?)`
+
+Creates an embedded database instance.
+
+Options:
+
+- `persist`: enables JSON persistence when `true`.
+- `storageDir`: overrides the default OS-specific storage directory.
+
+### `createCollection(name, schema, metadata?)`
+
+Creates a collection and associates a schema with it.
+
+### `deleteCollection(name)`
+
+Deletes a collection, its records, and its live indexes.
+
+### `getCollection(name)`
+
+Returns collection metadata, schema, records, and index metadata.
+
+### `insert(collection, value, id?)`
+
+Validates and inserts a record. Returns the primary key, or `false` when the
+requested ID already exists.
+
+### `get(collection, id)`
+
+Reads a record by primary key through the collection primary-key index.
+
+### `update(collection, id, value)`
+
+Validates and replaces record data while preserving record identity.
+
+### `delete(collection, id)`
+
+Deletes a record from storage and synchronizes the primary-key index.
+
+### `filter(collection, predicate)`
+
+Filters records inside a single collection.
 
 ## Features
 
-- In-memory data storage engine
-- Persistent disk storage using a flag-based save/update strategy
-- Schema isolation from record storage
-- Query execution pipeline for insert, filter, and retrieval operations
-- OS-aware file path resolution (Windows, macOS, Linux)
-- Modular storage abstraction for future engine extensions
+- Collection/table-oriented storage model
+- Collection-owned schemas
+- Unique record identity with generated or explicit primary keys
+- Hash-based primary-key indexing
+- Optional JSON persistence
+- Typed custom errors
+- TypeScript declaration output
+- Embedded single-process architecture
 
----
+## Package Notes
 
-## Why I Built This
+The public package entry point is `src/index.ts`, compiled to `dist/index.js`.
+Only stable APIs, errors, and public types are exported. Implementation managers
+live under `src/internal` and are not part of the public contract.
 
-Most developers use databases every day without understanding what happens beneath the ORM layer.
+## Versioning Recommendation
 
-I built AetherCache to deeply understand:
+Use `0.x` versions while the educational API is still evolving. Move to `1.0.0`
+after collection, CRUD, persistence, and query APIs are stable.
 
-- How databases persist data to disk
-- Storage engine design patterns
-- Query execution flow
-- Schema management
-- Data serialization strategies
-- Internal architecture tradeoffs
+## License
 
-The goal was not to replicate PostgreSQL or Redis, but to learn core database engineering concepts by building them from scratch.
-
----
-
-## Tech Stack
-
-- TypeScript
-- Node.js
-
----
-
-## Current Focus
-
-The current implementation focuses on:
-
-- Persistence
-- Schema management
-- Query execution
-
-Planned improvements include:
-
-- Indexing
-- Transactions
-- Concurrency handling
-- Caching optimizations
-- Query optimization
-
----
-
-## Example Operations
-
-```ts
-db.insert("users", {
-  id: 1,
-  name: "Sarath"
-})
-
-db.find("users", {
-  name: "Sarath"
-})
+MIT

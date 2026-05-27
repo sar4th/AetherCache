@@ -1,0 +1,1298 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="AetherCache documentation: a lightweight TypeScript in-memory database with collections, schema validation, hash indexing, and JSON persistence."
+    />
+    <title>AetherCache Documentation</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #090a0f;
+        --panel: #10131a;
+        --panel-strong: #151a23;
+        --line: #273040;
+        --line-soft: rgba(255, 255, 255, 0.08);
+        --text: #f4f7fb;
+        --muted: #a8b2c1;
+        --soft: #d8dee8;
+        --accent: #29d3a2;
+        --accent-2: #ffb86b;
+        --accent-3: #7ca7ff;
+        --danger: #ff7a90;
+        --shadow: 0 24px 70px rgba(0, 0, 0, 0.42);
+        --radius: 8px;
+        --sidebar: 280px;
+        --content: 920px;
+        --mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+        --sans:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        background:
+          radial-gradient(
+            circle at 18% 0%,
+            rgba(41, 211, 162, 0.12),
+            transparent 28rem
+          ),
+          radial-gradient(
+            circle at 88% 12%,
+            rgba(255, 184, 107, 0.08),
+            transparent 24rem
+          ),
+          var(--bg);
+        color: var(--text);
+        font-family: var(--sans);
+        line-height: 1.6;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      a:focus-visible,
+      button:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 3px;
+      }
+
+      .site-shell {
+        min-height: 100vh;
+      }
+
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 30;
+        border-bottom: 1px solid var(--line-soft);
+        background: rgba(9, 10, 15, 0.86);
+        backdrop-filter: blur(18px);
+      }
+
+      .topbar-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        max-width: 1240px;
+        margin: 0 auto;
+        padding: 0.85rem 1.25rem;
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0;
+      }
+
+      .brand-mark {
+        display: grid;
+        width: 2rem;
+        height: 2rem;
+        place-items: center;
+        border: 1px solid rgba(41, 211, 162, 0.42);
+        border-radius: var(--radius);
+        background: linear-gradient(
+          135deg,
+          rgba(41, 211, 162, 0.22),
+          rgba(124, 167, 255, 0.16)
+        );
+        color: var(--accent);
+        font-family: var(--mono);
+        font-size: 0.9rem;
+      }
+
+      .top-actions {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+      }
+
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.45rem;
+        min-height: 2.35rem;
+        padding: 0 0.9rem;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background: var(--panel);
+        color: var(--soft);
+        font-size: 0.9rem;
+        font-weight: 650;
+        transition:
+          border-color 160ms ease,
+          background 160ms ease,
+          transform 160ms ease;
+      }
+
+      .button:hover {
+        border-color: rgba(41, 211, 162, 0.55);
+        background: var(--panel-strong);
+        transform: translateY(-1px);
+      }
+
+      .button-primary {
+        border-color: rgba(41, 211, 162, 0.55);
+        background: #12241f;
+        color: #e9fff8;
+      }
+
+      .layout {
+        display: grid;
+        grid-template-columns: var(--sidebar) minmax(0, 1fr);
+        gap: 2rem;
+        max-width: 1240px;
+        margin: 0 auto;
+        padding: 0 1.25rem 3rem;
+      }
+
+      .sidebar {
+        position: sticky;
+        top: 4.4rem;
+        align-self: start;
+        height: calc(100vh - 5rem);
+        padding: 1.4rem 0 2rem;
+        overflow: auto;
+      }
+
+      .sidebar-title {
+        margin: 0 0 0.75rem;
+        color: var(--muted);
+        font-size: 0.72rem;
+        font-weight: 750;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .nav-list {
+        display: grid;
+        gap: 0.18rem;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .nav-link {
+        display: flex;
+        align-items: center;
+        min-height: 2.1rem;
+        padding: 0.35rem 0.7rem;
+        border-left: 2px solid transparent;
+        border-radius: 0 var(--radius) var(--radius) 0;
+        color: var(--muted);
+        font-size: 0.92rem;
+        transition:
+          color 160ms ease,
+          background 160ms ease,
+          border-color 160ms ease;
+      }
+
+      .nav-link:hover,
+      .nav-link.active {
+        border-left-color: var(--accent);
+        background: rgba(41, 211, 162, 0.08);
+        color: var(--text);
+      }
+
+      main {
+        min-width: 0;
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr);
+        gap: 2rem;
+        align-items: center;
+        padding: 5.2rem 0 3rem;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        width: fit-content;
+        align-items: center;
+        gap: 0.45rem;
+        margin-bottom: 1rem;
+        padding: 0.32rem 0.55rem;
+        border: 1px solid rgba(124, 167, 255, 0.35);
+        border-radius: 999px;
+        background: rgba(124, 167, 255, 0.08);
+        color: #dce7ff;
+        font-size: 0.78rem;
+        font-weight: 700;
+      }
+
+      h1,
+      h2,
+      h3 {
+        margin: 0;
+        line-height: 1.15;
+        letter-spacing: 0;
+      }
+
+      h1 {
+        max-width: 760px;
+        font-size: clamp(2.5rem, 6vw, 5rem);
+      }
+
+      h2 {
+        padding-top: 1rem;
+        font-size: clamp(1.8rem, 3vw, 2.6rem);
+      }
+
+      h3 {
+        font-size: 1.1rem;
+      }
+
+      .tagline {
+        max-width: 680px;
+        margin: 1.1rem 0 1.6rem;
+        color: var(--muted);
+        font-size: 1.1rem;
+      }
+
+      .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin: 1.5rem 0;
+      }
+
+      .install-command {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        max-width: 570px;
+        margin-top: 1.1rem;
+        padding: 0.8rem 0.85rem 0.8rem 1rem;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background: rgba(16, 19, 26, 0.86);
+        box-shadow: var(--shadow);
+      }
+
+      code,
+      pre {
+        font-family: var(--mono);
+      }
+
+      .install-command code {
+        color: #dffbf2;
+        font-size: 0.9rem;
+        white-space: nowrap;
+        overflow-x: auto;
+      }
+
+      .copy-btn {
+        flex: none;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background: #171d27;
+        color: var(--muted);
+        cursor: pointer;
+        font-size: 0.78rem;
+        font-weight: 750;
+        min-height: 2rem;
+        padding: 0 0.65rem;
+        transition:
+          color 160ms ease,
+          border-color 160ms ease,
+          background 160ms ease;
+      }
+
+      .copy-btn:hover {
+        border-color: rgba(41, 211, 162, 0.5);
+        background: #1b2430;
+        color: var(--text);
+      }
+
+      .diagram {
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background: linear-gradient(
+          180deg,
+          rgba(21, 26, 35, 0.95),
+          rgba(12, 14, 20, 0.95)
+        );
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+
+      .diagram-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.85rem 1rem;
+        border-bottom: 1px solid var(--line-soft);
+        color: var(--muted);
+        font-family: var(--mono);
+        font-size: 0.78rem;
+      }
+
+      .window-dots {
+        display: inline-flex;
+        gap: 0.38rem;
+      }
+
+      .window-dots span {
+        width: 0.58rem;
+        height: 0.58rem;
+        border-radius: 999px;
+        background: var(--line);
+      }
+
+      .window-dots span:nth-child(1) {
+        background: var(--danger);
+      }
+
+      .window-dots span:nth-child(2) {
+        background: var(--accent-2);
+      }
+
+      .window-dots span:nth-child(3) {
+        background: var(--accent);
+      }
+
+      .architecture {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+
+      .section {
+        padding: 3rem 0;
+        border-top: 1px solid var(--line-soft);
+        scroll-margin-top: 5.2rem;
+      }
+
+      .section > p,
+      .section-lead {
+        max-width: 760px;
+        color: var(--muted);
+        font-size: 1rem;
+      }
+
+      .grid {
+        display: grid;
+        gap: 1rem;
+      }
+
+      .features-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        margin-top: 1.35rem;
+      }
+
+      .card {
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background: rgba(16, 19, 26, 0.78);
+        padding: 1.05rem;
+        transition:
+          border-color 160ms ease,
+          background 160ms ease,
+          transform 160ms ease;
+      }
+
+      .card:hover {
+        border-color: rgba(124, 167, 255, 0.42);
+        background: rgba(21, 26, 35, 0.86);
+        transform: translateY(-1px);
+      }
+
+      .card h3 {
+        margin-bottom: 0.45rem;
+      }
+
+      .card p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.94rem;
+      }
+
+      .pill {
+        display: inline-flex;
+        margin-bottom: 0.85rem;
+        padding: 0.22rem 0.5rem;
+        border: 1px solid rgba(41, 211, 162, 0.3);
+        border-radius: 999px;
+        color: var(--accent);
+        font-family: var(--mono);
+        font-size: 0.72rem;
+      }
+
+      .code-block {
+        position: relative;
+        margin: 1.15rem 0;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background: #0d1017;
+        overflow: hidden;
+      }
+
+      .code-label {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        min-height: 2.6rem;
+        padding: 0 0.85rem 0 1rem;
+        border-bottom: 1px solid var(--line-soft);
+        color: var(--muted);
+        font-family: var(--mono);
+        font-size: 0.78rem;
+      }
+
+      pre {
+        margin: 0;
+        padding: 1rem;
+        overflow-x: auto;
+        color: #e8edf5;
+        font-size: 0.9rem;
+        line-height: 1.7;
+      }
+
+      .token-keyword {
+        color: #7ca7ff;
+      }
+
+      .token-string {
+        color: #9be8c9;
+      }
+
+      .token-function {
+        color: #ffcf8a;
+      }
+
+      .token-comment {
+        color: #788394;
+      }
+
+      .token-number {
+        color: #ff9daf;
+      }
+
+      .content-list {
+        display: grid;
+        gap: 0.7rem;
+        padding-left: 1.1rem;
+        color: var(--muted);
+      }
+
+      .api-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        margin-top: 1.35rem;
+      }
+
+      .api-card {
+        display: grid;
+        gap: 0.65rem;
+      }
+
+      .api-signature {
+        width: fit-content;
+        max-width: 100%;
+        padding: 0.35rem 0.5rem;
+        border-radius: 6px;
+        background: #0d1017;
+        color: #dffbf2;
+        overflow-x: auto;
+        font-family: var(--mono);
+        font-size: 0.78rem;
+      }
+
+      .callout {
+        margin: 1.2rem 0;
+        padding: 1rem;
+        border: 1px solid rgba(255, 184, 107, 0.35);
+        border-radius: var(--radius);
+        background: rgba(255, 184, 107, 0.08);
+        color: #f7dfbf;
+      }
+
+      .two-column {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 1rem;
+        margin-top: 1.2rem;
+      }
+
+      .footer {
+        border-top: 1px solid var(--line-soft);
+        color: var(--muted);
+        padding: 2rem 0 3rem;
+      }
+
+      .footer-inner {
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+        max-width: 1240px;
+        margin: 0 auto;
+        padding: 0 1.25rem;
+      }
+
+      .footer-links {
+        display: flex;
+        gap: 1rem;
+      }
+
+      .footer a {
+        color: var(--soft);
+      }
+
+      @media (max-width: 980px) {
+        .layout {
+          display: block;
+        }
+
+        .sidebar {
+          position: sticky;
+          top: 4rem;
+          z-index: 20;
+          height: auto;
+          margin: 0 -1.25rem;
+          padding: 0.8rem 1.25rem;
+          border-bottom: 1px solid var(--line-soft);
+          background: rgba(9, 10, 15, 0.92);
+          backdrop-filter: blur(18px);
+        }
+
+        .sidebar-title {
+          display: none;
+        }
+
+        .nav-list {
+          display: flex;
+          gap: 0.45rem;
+          overflow-x: auto;
+          padding-bottom: 0.15rem;
+        }
+
+        .nav-link {
+          white-space: nowrap;
+          border: 1px solid var(--line);
+          border-radius: 999px;
+          min-height: 2rem;
+        }
+
+        .nav-link.active,
+        .nav-link:hover {
+          border-color: rgba(41, 211, 162, 0.5);
+        }
+
+        .hero {
+          grid-template-columns: 1fr;
+          padding-top: 3rem;
+        }
+      }
+
+      @media (max-width: 720px) {
+        .topbar-inner {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+
+        .top-actions {
+          width: 100%;
+        }
+
+        .top-actions .button {
+          flex: 1;
+        }
+
+        .features-grid,
+        .api-grid,
+        .two-column {
+          grid-template-columns: 1fr;
+        }
+
+        .install-command {
+          align-items: stretch;
+          flex-direction: column;
+        }
+
+        .copy-btn {
+          width: 100%;
+        }
+
+        .footer-inner {
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="site-shell">
+      <header class="topbar">
+        <div class="topbar-inner">
+          <a
+            class="brand"
+            href="#top"
+            aria-label="AetherCache documentation home"
+          >
+            <span class="brand-mark">AC</span>
+            <span>AetherCache</span>
+          </a>
+          <nav class="top-actions" aria-label="Primary actions">
+            <a class="button" href="#api-reference">API</a>
+            <a
+              class="button button-primary"
+              href="https://github.com/sar4th/AetherCache"
+              target="_blank"
+              rel="noreferrer"
+              >GitHub</a
+            >
+          </nav>
+        </div>
+      </header>
+
+      <div class="layout">
+        <aside class="sidebar" aria-label="Documentation navigation">
+          <p class="sidebar-title">Documentation</p>
+          <ol class="nav-list">
+            <li><a class="nav-link" href="#introduction">Introduction</a></li>
+            <li><a class="nav-link" href="#installation">Installation</a></li>
+            <li><a class="nav-link" href="#quick-start">Quick Start</a></li>
+            <li><a class="nav-link" href="#collections">Collections</a></li>
+            <li>
+              <a class="nav-link" href="#crud-operations">CRUD Operations</a>
+            </li>
+            <li><a class="nav-link" href="#indexing">Indexing</a></li>
+            <li><a class="nav-link" href="#persistence">Persistence</a></li>
+            <li><a class="nav-link" href="#api-reference">API Reference</a></li>
+            <li><a class="nav-link" href="#roadmap">Future Roadmap</a></li>
+          </ol>
+        </aside>
+
+        <main id="top">
+          <section class="hero" aria-labelledby="page-title">
+            <div>
+              <span class="eyebrow">TypeScript embedded database</span>
+              <h1 id="page-title">AetherCache</h1>
+              <p class="tagline">
+                A lightweight in-memory database engine for learning and
+                building collection-based storage, schema validation, hash
+                indexing, and JSON persistence.
+              </p>
+              <div class="hero-actions">
+                <a
+                  class="button button-primary"
+                  href="https://github.com/"
+                  target="_blank"
+                  rel="noreferrer"
+                  >View on GitHub</a
+                >
+                <a class="button" href="#quick-start">Start building</a>
+              </div>
+              <div class="install-command" aria-label="Install command">
+                <code>npm install aether-cache</code>
+                <button
+                  class="copy-btn"
+                  type="button"
+                  data-copy="npm install aether-cache"
+                >
+                  Copy
+                </button>
+              </div>
+            </div>
+
+            <div class="diagram" aria-label="AetherCache architecture diagram">
+              <div class="diagram-header">
+                <span>aether-cache/internal</span>
+                <span class="window-dots" aria-hidden="true"
+                  ><span></span><span></span><span></span
+                ></span>
+              </div>
+              <svg
+                class="architecture"
+                viewBox="0 0 620 430"
+                role="img"
+                aria-labelledby="diagram-title diagram-desc"
+              >
+                <title id="diagram-title">
+                  AetherCache storage architecture
+                </title>
+                <desc id="diagram-desc">
+                  Database contains collections. Collections contain schemas,
+                  records, and indexes.
+                </desc>
+                <rect
+                  x="35"
+                  y="42"
+                  width="550"
+                  height="346"
+                  rx="12"
+                  fill="#111821"
+                  stroke="#2b3545"
+                />
+                <text
+                  x="66"
+                  y="85"
+                  fill="#f4f7fb"
+                  font-family="Consolas, monospace"
+                  font-size="22"
+                >
+                  Database
+                </text>
+                <rect
+                  x="68"
+                  y="118"
+                  width="484"
+                  height="226"
+                  rx="10"
+                  fill="#0d1017"
+                  stroke="#2b3545"
+                />
+                <text
+                  x="96"
+                  y="158"
+                  fill="#29d3a2"
+                  font-family="Consolas, monospace"
+                  font-size="18"
+                >
+                  Collection: users
+                </text>
+                <rect
+                  x="100"
+                  y="188"
+                  width="128"
+                  height="92"
+                  rx="8"
+                  fill="#151a23"
+                  stroke="#334054"
+                />
+                <text
+                  x="124"
+                  y="224"
+                  fill="#ffcf8a"
+                  font-family="Consolas, monospace"
+                  font-size="15"
+                >
+                  Schema
+                </text>
+                <text
+                  x="121"
+                  y="250"
+                  fill="#a8b2c1"
+                  font-family="Consolas, monospace"
+                  font-size="12"
+                >
+                  name:string
+                </text>
+                <rect
+                  x="246"
+                  y="188"
+                  width="128"
+                  height="92"
+                  rx="8"
+                  fill="#151a23"
+                  stroke="#334054"
+                />
+                <text
+                  x="271"
+                  y="224"
+                  fill="#7ca7ff"
+                  font-family="Consolas, monospace"
+                  font-size="15"
+                >
+                  Records
+                </text>
+                <text
+                  x="274"
+                  y="250"
+                  fill="#a8b2c1"
+                  font-family="Consolas, monospace"
+                  font-size="12"
+                >
+                  id -> data
+                </text>
+                <rect
+                  x="392"
+                  y="188"
+                  width="128"
+                  height="92"
+                  rx="8"
+                  fill="#151a23"
+                  stroke="#334054"
+                />
+                <text
+                  x="418"
+                  y="224"
+                  fill="#29d3a2"
+                  font-family="Consolas, monospace"
+                  font-size="15"
+                >
+                  Indexes
+                </text>
+                <text
+                  x="419"
+                  y="250"
+                  fill="#a8b2c1"
+                  font-family="Consolas, monospace"
+                  font-size="12"
+                >
+                  pk -> record
+                </text>
+                <path d="M228 234 H246" stroke="#526177" stroke-width="2" />
+                <path d="M374 234 H392" stroke="#526177" stroke-width="2" />
+                <text
+                  x="96"
+                  y="320"
+                  fill="#a8b2c1"
+                  font-family="Consolas, monospace"
+                  font-size="13"
+                >
+                  O(1) primary-key lookup with collection-scoped records
+                </text>
+              </svg>
+            </div>
+          </section>
+
+          <section class="section" id="introduction">
+            <h2>Introduction</h2>
+            <p class="section-lead">
+              AetherCache is a compact database project built to explore
+              internal database concepts: collection storage, record identity,
+              schema validation, primary-key indexing, and persistence. It is
+              intentionally small, readable, and designed for experimentation.
+            </p>
+            <div class="grid features-grid" aria-label="Feature summary">
+              <article class="card">
+                <span class="pill">storage</span>
+                <h3>In-memory storage</h3>
+                <p>
+                  Collections and records live in memory for fast local access
+                  and simple engine behavior.
+                </p>
+              </article>
+              <article class="card">
+                <span class="pill">schema</span>
+                <h3>Schema validation</h3>
+                <p>
+                  Each collection owns a schema, keeping validation aligned with
+                  table-style boundaries.
+                </p>
+              </article>
+              <article class="card">
+                <span class="pill">index</span>
+                <h3>Hash indexing</h3>
+                <p>
+                  Primary-key indexes provide direct hash-map lookup while
+                  leaving room for secondary indexes.
+                </p>
+              </article>
+              <article class="card">
+                <span class="pill">disk</span>
+                <h3>JSON persistence</h3>
+                <p>
+                  Database state can be serialized to local JSON without
+                  coupling indexes to disk format.
+                </p>
+              </article>
+              <article class="card">
+                <span class="pill">types</span>
+                <h3>TypeScript support</h3>
+                <p>
+                  The engine uses TypeScript interfaces for collections,
+                  records, schemas, and indexes.
+                </p>
+              </article>
+              <article class="card">
+                <span class="pill">embedded</span>
+                <h3>Embedded architecture</h3>
+                <p>
+                  Use the database directly in a Node.js process without running
+                  a separate server.
+                </p>
+              </article>
+            </div>
+          </section>
+
+          <section class="section" id="installation">
+            <h2>Installation</h2>
+            <p>
+              Install the package, then import the database class from your
+              TypeScript or JavaScript project.
+            </p>
+            <div class="code-block">
+              <div class="code-label">
+                <span>terminal</span>
+                <button
+                  class="copy-btn"
+                  type="button"
+                  data-copy="npm install aether-cache"
+                >
+                  Copy
+                </button>
+              </div>
+              <pre><code>npm install aether-cache</code></pre>
+            </div>
+            <div class="callout">
+              AetherCache is designed as a learning-friendly embedded database.
+              Keep it close to your app logic, then evolve the storage,
+              indexing, and query layers as the project grows.
+            </div>
+          </section>
+
+          <section class="section" id="quick-start">
+            <h2>Quick Start</h2>
+            <p>
+              Create a database instance, define a collection schema, insert
+              records, and retrieve them by primary key.
+            </p>
+            <div class="code-block">
+              <div class="code-label">
+                <span>quick-start.ts</span>
+                <button
+                  class="copy-btn"
+                  type="button"
+                  data-copy-target="quick-start-code"
+                >
+                  Copy
+                </button>
+              </div>
+              <pre
+                id="quick-start-code"
+              ><code><span class="token-keyword">import</span> { microDB } <span class="token-keyword">from</span> <span class="token-string">"aether-cache"</span>;
+
+<span class="token-keyword">const</span> db = <span class="token-keyword">new</span> <span class="token-function">microDB</span>&lt;{
+  name: string;
+  age: number;
+  email: string;
+}&gt;();
+
+db.<span class="token-function">createCollection</span>(<span class="token-string">"users"</span>, {
+  name: <span class="token-string">"string"</span>,
+  age: <span class="token-string">"number"</span>,
+  email: <span class="token-string">"string"</span>,
+});
+
+<span class="token-keyword">const</span> id = db.<span class="token-function">insert</span>(<span class="token-string">"users"</span>, {
+  name: <span class="token-string">"Ada Lovelace"</span>,
+  age: <span class="token-number">36</span>,
+  email: <span class="token-string">"ada@example.com"</span>,
+});
+
+<span class="token-keyword">const</span> user = db.<span class="token-function">get</span>(<span class="token-string">"users"</span>, id <span class="token-keyword">as</span> string);
+console.<span class="token-function">log</span>(user?.data);</code></pre>
+            </div>
+          </section>
+
+          <section class="section" id="collections">
+            <h2>Collections</h2>
+            <p>
+              Collections are the main boundary in AetherCache. A collection
+              owns its schema, records, metadata, and index definitions.
+            </p>
+            <div class="two-column">
+              <article class="card">
+                <h3>Collection metadata</h3>
+                <p>
+                  Each collection tracks creation time, update time, and record
+                  count for lightweight introspection.
+                </p>
+              </article>
+              <article class="card">
+                <h3>Schema association</h3>
+                <p>
+                  Schemas belong to collections, which keeps validation separate
+                  from record identity.
+                </p>
+              </article>
+            </div>
+            <div class="code-block">
+              <div class="code-label">
+                <span>collections.ts</span>
+                <button
+                  class="copy-btn"
+                  type="button"
+                  data-copy-target="collections-code"
+                >
+                  Copy
+                </button>
+              </div>
+              <pre
+                id="collections-code"
+              ><code>db.<span class="token-function">createCollection</span>(<span class="token-string">"sessions"</span>, {
+  token: <span class="token-string">"string"</span>,
+  expiresAt: <span class="token-string">"number"</span>,
+});
+
+<span class="token-keyword">const</span> collection = db.<span class="token-function">getCollection</span>(<span class="token-string">"sessions"</span>);
+console.<span class="token-function">log</span>(collection.metadata.recordCount);</code></pre>
+            </div>
+          </section>
+
+          <section class="section" id="crud-operations">
+            <h2>CRUD Operations</h2>
+            <p>
+              Records are collection-scoped and addressed by primary key. IDs
+              can be generated automatically or supplied explicitly for
+              deterministic workflows.
+            </p>
+            <div class="code-block">
+              <div class="code-label">
+                <span>crud.ts</span>
+                <button
+                  class="copy-btn"
+                  type="button"
+                  data-copy-target="crud-code"
+                >
+                  Copy
+                </button>
+              </div>
+              <pre
+                id="crud-code"
+              ><code><span class="token-comment">// Create</span>
+<span class="token-keyword">const</span> id = db.<span class="token-function">insert</span>(<span class="token-string">"users"</span>, {
+  name: <span class="token-string">"Grace Hopper"</span>,
+  age: <span class="token-number">85</span>,
+  email: <span class="token-string">"grace@example.com"</span>,
+});
+
+<span class="token-comment">// Read</span>
+<span class="token-keyword">const</span> record = db.<span class="token-function">get</span>(<span class="token-string">"users"</span>, id <span class="token-keyword">as</span> string);
+
+<span class="token-comment">// Update</span>
+db.<span class="token-function">update</span>(<span class="token-string">"users"</span>, id <span class="token-keyword">as</span> string, {
+  name: <span class="token-string">"Grace Hopper"</span>,
+  age: <span class="token-number">86</span>,
+  email: <span class="token-string">"grace@example.com"</span>,
+});
+
+<span class="token-comment">// Delete</span>
+db.<span class="token-function">delete</span>(<span class="token-string">"users"</span>, id <span class="token-keyword">as</span> string);</code></pre>
+            </div>
+          </section>
+
+          <section class="section" id="indexing">
+            <h2>Indexing</h2>
+            <p>
+              AetherCache maintains a hash-based primary-key index per
+              collection. The live index stores references to records, enabling
+              direct lookup without scanning the full collection.
+            </p>
+            <ul class="content-list">
+              <li>Primary-key lookup is collection-scoped.</li>
+              <li>Indexes synchronize on insert, update, and delete.</li>
+              <li>
+                Index metadata stays on the collection; live hash maps stay
+                inside the index manager.
+              </li>
+              <li>
+                Secondary indexes can later use the same manager boundary.
+              </li>
+            </ul>
+            <div class="code-block">
+              <div class="code-label">
+                <span>indexing.ts</span>
+                <button
+                  class="copy-btn"
+                  type="button"
+                  data-copy-target="indexing-code"
+                >
+                  Copy
+                </button>
+              </div>
+              <pre
+                id="indexing-code"
+              ><code><span class="token-keyword">const</span> record = db.indexManager.<span class="token-function">getByPrimaryKey</span>(
+  <span class="token-string">"users"</span>,
+  id <span class="token-keyword">as</span> string
+);
+
+console.<span class="token-function">log</span>(record?.identity.primaryKey);</code></pre>
+            </div>
+          </section>
+
+          <section class="section" id="persistence">
+            <h2>Persistence</h2>
+            <p>
+              Persistence is JSON-based and intentionally simple. Stored data
+              includes collections, schemas, records, metadata, and lightweight
+              index definitions. Live index hash maps can be rebuilt from
+              records.
+            </p>
+            <div class="callout">
+              This keeps persistence readable and avoids tying disk format to
+              in-memory indexing details.
+            </div>
+            <div class="code-block">
+              <div class="code-label">
+                <span>initialize.ts</span>
+                <button
+                  class="copy-btn"
+                  type="button"
+                  data-copy-target="persistence-code"
+                >
+                  Copy
+                </button>
+              </div>
+              <pre
+                id="persistence-code"
+              ><code><span class="token-keyword">const</span> db = <span class="token-keyword">new</span> <span class="token-function">microDB</span>();
+<span class="token-keyword">await</span> db.<span class="token-function">initialize</span>();
+
+<span class="token-comment">// Collections are loaded from disk and indexes are rebuilt in memory.</span></code></pre>
+            </div>
+          </section>
+
+          <section class="section" id="api-reference">
+            <h2>API Reference</h2>
+            <p>A concise map of the core developer-facing methods.</p>
+            <div class="grid api-grid">
+              <article class="card api-card">
+                <h3>createCollection</h3>
+                <code class="api-signature"
+                  >db.createCollection(name, schema, metadata?)</code
+                >
+                <p>
+                  Create a collection with schema, metadata, records, and index
+                  definitions.
+                </p>
+              </article>
+              <article class="card api-card">
+                <h3>deleteCollection</h3>
+                <code class="api-signature">db.deleteCollection(name)</code>
+                <p>Remove a collection and drop its live indexes.</p>
+              </article>
+              <article class="card api-card">
+                <h3>insert</h3>
+                <code class="api-signature"
+                  >db.insert(collection, value, id?)</code
+                >
+                <p>
+                  Validate and insert a record, returning the primary key or
+                  false.
+                </p>
+              </article>
+              <article class="card api-card">
+                <h3>get</h3>
+                <code class="api-signature">db.get(collection, id)</code>
+                <p>Read a record using the collection primary-key index.</p>
+              </article>
+              <article class="card api-card">
+                <h3>update</h3>
+                <code class="api-signature"
+                  >db.update(collection, id, value)</code
+                >
+                <p>
+                  Validate, replace record data, and synchronize the primary
+                  index.
+                </p>
+              </article>
+              <article class="card api-card">
+                <h3>delete</h3>
+                <code class="api-signature">db.delete(collection, id)</code>
+                <p>
+                  Delete a record from storage and remove it from the index.
+                </p>
+              </article>
+            </div>
+          </section>
+
+          <section class="section" id="roadmap">
+            <h2>Future Roadmap</h2>
+            <p>
+              AetherCache is intentionally modular so new database internals can
+              be added without replacing the collection and record foundation.
+            </p>
+            <ul class="content-list">
+              <li>Secondary indexes for fields beyond primary key.</li>
+              <li>Query engine integration over collections and indexes.</li>
+              <li>Range queries and basic query planning.</li>
+              <li>Transaction and concurrency experiments.</li>
+              <li>Persistence compaction and recovery strategies.</li>
+            </ul>
+          </section>
+        </main>
+      </div>
+
+      <footer class="footer">
+        <div class="footer-inner">
+          <div>
+            <strong>AetherCache</strong>
+            <div>Embedded database internals, built in TypeScript.</div>
+          </div>
+          <div class="footer-links" aria-label="Footer links">
+            <a href="https://github.com/" target="_blank" rel="noreferrer"
+              >GitHub</a
+            >
+            <a href="#top">Docs</a>
+            <span>MIT License</span>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script>
+      const copyButtons = document.querySelectorAll(
+        "[data-copy], [data-copy-target]",
+      );
+
+      copyButtons.forEach((button) => {
+        button.addEventListener("click", async () => {
+          const directText = button.getAttribute("data-copy");
+          const targetId = button.getAttribute("data-copy-target");
+          const target = targetId ? document.getElementById(targetId) : null;
+          const text = directText || (target ? target.innerText : "");
+          const originalText = button.textContent;
+
+          try {
+            await navigator.clipboard.writeText(text.trim());
+            button.textContent = "Copied";
+          } catch {
+            button.textContent = "Copy failed";
+          }
+
+          window.setTimeout(() => {
+            button.textContent = originalText;
+          }, 1400);
+        });
+      });
+
+      const sections = Array.from(
+        document.querySelectorAll("main section[id]"),
+      );
+      const navLinks = Array.from(document.querySelectorAll(".nav-link"));
+
+      const setActiveLink = () => {
+        const current = sections
+          .map((section) => ({
+            id: section.id,
+            top: section.getBoundingClientRect().top,
+          }))
+          .filter((section) => section.top <= 140)
+          .pop();
+
+        navLinks.forEach((link) => {
+          link.classList.toggle(
+            "active",
+            current ? link.getAttribute("href") === `#${current.id}` : false,
+          );
+        });
+      };
+
+      setActiveLink();
+      window.addEventListener("scroll", setActiveLink, { passive: true });
+    </script>
+  </body>
+</html>
