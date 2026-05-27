@@ -1,6 +1,6 @@
 {
   "name": "aether-cache",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A lightweight embedded TypeScript database with collections, schema validation, indexing, and JSON persistence.",
   "license": "MIT",
   "author": "Sarath",
