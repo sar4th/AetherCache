@@ -50,6 +50,7 @@
     "access": "public"
   },
   "dependencies": {
+    "aether-cache": "^0.1.3",
     "commander": "^13.1.0"
   },
   "devDependencies": {
