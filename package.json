@@ -40,12 +40,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sar4th/aether-cache.git"
+    "url": "git+https://github.com/sar4th/AetherCache.git"
   },
   "bugs": {
-    "url": "https://github.com/sar4th/aether-cache/issues"
+    "url": "https://github.com/sar4th/AetherCache/issues"
   },
-  "homepage": "https://github.com/sar4th/aether-cache#readme",
+  "homepage": "https://github.com/sar4th/AetherCache#readme",
   "publishConfig": {
     "access": "public"
   },
